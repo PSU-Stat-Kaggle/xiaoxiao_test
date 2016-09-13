@@ -1,0 +1,33 @@
+---
+title: "Iris_data_Prediction"
+author: "Xiaoxiao Li"
+date: "September 12, 2016"
+output: pdf_document
+---
+```{r}
+iris <-read.csv("/Users/Xiaoxiao/Downloads/iris/Iris.csv")
+
+library(tree)
+train=rep(FALSE, nrow(iris))
+rand = runif(nrow(iris), min = 0, max = 1)
+train[rand<=0.8]=TRUE 
+tree.1 = tree(Species~., iris, subset = train)
+summary(tree.1)
+plot(tree.1)
+text(tree.1, pretty=0)
+predtree.1=predict(tree.1, iris[!train,],type="class")
+table(predtree.1,iris$Species[!train])
+```
+
+As the table shows, classification tree gives a decent prediction on "Species"
+
+```{r}
+library(randomForest)
+
+rf.1 <- randomForest(Species~., iris, subset = train)
+predrf.1 <- predict(rf.1, iris[!train,], type = 'class')
+table(predrf.1,iris$Species[!train])
+
+```
+
+Random forest does a better job than a single classification tree.
